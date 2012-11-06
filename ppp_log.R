@@ -5,6 +5,8 @@
 # Summarise mean / median / boxplot for received and sent;
 # Graph over time
 
+## Usage: ppplog("2012-11-01 15:20:00) shows data from 1 Nov.
+
 ppplog <- function (fromdate = "1990-01-01 00:00:00") {
   # Get the current ppplog. This may need work / better regex:
   system("cat /private/var/log/ppp.log | grep bytes. > ~/workspace/ppplog.txt")
