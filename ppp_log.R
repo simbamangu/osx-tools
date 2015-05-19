@@ -7,11 +7,11 @@
 
 ## Usage: ppplog("2012-11-01 15:20:00) shows data from 1 Nov.
 
-ppplog <- function (fromdate = "1990-01-01 00:00:00") {
+ppplog <- function (fromdate = "1990-01-01 00:00:00", todate = Sys.time()) {
   # Get the current ppplog. This may need work / better regex:
   system("cat /private/var/log/ppp.log | grep bytes. > ~/workspace/ppplog.txt")
   since <- strptime(fromdate, "%Y-%m-%d %H:%M:%S") # summarise since when?
-  
+  to <- strptime(todate, "%Y-%m-%d %H:%M:%S")
   # Convert to a table
   ppplog <- read.table("~/workspace/ppplog.txt")
   
@@ -21,7 +21,7 @@ ppplog <- function (fromdate = "1990-01-01 00:00:00") {
   p.sent <- as.numeric(ppplog$V8)
   p.rec <- as.numeric(ppplog$V11)
   plog <- data.frame(date = p.date, time = p.time, sent = p.sent, received = p.rec)
-  plog <- plog[plog$time > since,]
+  plog <- plog[plog$time > since & plog$time < to,]
   
   date.received <- aggregate(plog$received / 1024, by = list(Date=plog$date), sum)
   date.sent <- aggregate(plog$sent / 1024, by = list(Date=plog$date), sum)
